@@ -58,7 +58,7 @@ func (c Client) CreateRevisionRun(ctx context.Context, json io.Reader) error {
 	return nil
 }
 
-func ConnectSecure(address string) {
+func ConnectSecure(address, file string) {
 
 	log.Println("client started connecting to.. " + address)
 
@@ -75,7 +75,7 @@ func ConnectSecure(address string) {
 	}
 	defer conn.Close()
 
-	json, err := ioutil.ReadFile("yacht.json")
+	json, err := ioutil.ReadFile(file)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -87,7 +87,7 @@ func ConnectSecure(address string) {
 
 }
 
-func ConnectInsecure(address string) {
+func ConnectInsecure(address, file string) {
 
 	log.Println("client started connecting to.. " + address)
 
@@ -98,7 +98,7 @@ func ConnectInsecure(address string) {
 	}
 	defer conn.Close()
 
-	json, err := ioutil.ReadFile("client/request.json")
+	json, err := ioutil.ReadFile(file)
 	if err != nil {
 		log.Fatalln(err)
 	}

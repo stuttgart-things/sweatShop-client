@@ -27,14 +27,15 @@ var createCmd = &cobra.Command{
 		// input: get flags
 		endpoint, _ := cmd.LocalFlags().GetString("endpoint")
 		port, _ := cmd.LocalFlags().GetString("port")
+		file, _ := cmd.LocalFlags().GetString("file")
 
 		// set adress
 		address := endpoint + ":" + port
 
 		if strings.Contains(address, "localhost") {
-			internal.ConnectInsecure(address)
+			internal.ConnectInsecure(address, file)
 		} else {
-			internal.ConnectSecure(address)
+			internal.ConnectSecure(address, file)
 		}
 
 	},
