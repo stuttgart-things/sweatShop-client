@@ -1,6 +1,6 @@
 # stuttgart-things/yacht-application-client
 
-YAC is a gRPC Client for validating & sending revisionRuns
+YAC is a gRPC Client for validating & sending revisionRuns to YAS (application server).
 
 License
 -------
