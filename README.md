@@ -9,4 +9,4 @@ License
 Author Information
 ------------------
 
-Patrick Hermann, Stuttgart-Things 04/2023
+Patrick Hermann, stuttgart-things 04/2023
