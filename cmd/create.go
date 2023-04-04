@@ -1,6 +1,7 @@
 /*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
+Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 */
+
 package cmd
 
 import (
@@ -24,12 +25,12 @@ var createCmd = &cobra.Command{
 	Long:  `create command`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		// input: get flags
+		// GET FLAGS
 		endpoint, _ := cmd.LocalFlags().GetString("endpoint")
 		port, _ := cmd.LocalFlags().GetString("port")
 		file, _ := cmd.LocalFlags().GetString("file")
 
-		// set adress
+		// SET ADDRESS
 		address := endpoint + ":" + port
 
 		if strings.Contains(address, "localhost") {
