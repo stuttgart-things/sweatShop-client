@@ -5,6 +5,7 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/stuttgart-things/yacht-application-client/internal"
@@ -38,6 +39,9 @@ var createCmd = &cobra.Command{
 		} else {
 			internal.ConnectSecure(address, file)
 		}
+
+		commit := internal.GetGitRevision("https://github.com/stuttgart-things/yacht-application-server.git")
+		fmt.Println(commit)
 
 	},
 }
