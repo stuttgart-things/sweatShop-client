@@ -19,11 +19,11 @@ import (
 // address = "sleeveless-dev.labul.sva.de:8011"
 //)
 
-// createCmd represents the create command
-var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "create command",
-	Long:  `create command`,
+// uploadCmd represents the upload command
+var uploadCmd = &cobra.Command{
+	Use:   "upload",
+	Short: "upload command",
+	Long:  `upload command`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// GET FLAGS
@@ -47,10 +47,10 @@ var createCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(createCmd)
-	createCmd.Flags().String("endpoint", "", "grpc fqdn/ip of yas-endpoint")
-	createCmd.Flags().String("port", "443", "grpc port of yas-endpoint")
-	createCmd.Flags().String("file", "", "file containing revisionRuns")
-	createCmd.MarkFlagRequired("endpoint")
-	createCmd.MarkFlagRequired("file")
+	rootCmd.AddCommand(uploadCmd)
+	uploadCmd.Flags().String("endpoint", "", "grpc fqdn/ip of yas-endpoint")
+	uploadCmd.Flags().String("port", "443", "grpc port of yas-endpoint")
+	uploadCmd.Flags().String("file", "", "file containing revisionRuns")
+	uploadCmd.MarkFlagRequired("endpoint")
+	uploadCmd.MarkFlagRequired("file")
 }
