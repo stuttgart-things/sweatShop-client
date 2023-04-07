@@ -18,7 +18,6 @@ tasks:
     cmds:
       - cmd: golangci-lint run
         ignore_error: true
-
   test:
     desc: Test code
     cmds:
