@@ -51,9 +51,9 @@ tasks:
     deps: [push]
     cmds:
       - git tag -a {{ .UPDATED_TAG_VERSION }} -m "build release for {{ .UPDATED_TAG_VERSION }}"
+      - git push origin --tags
       - goreleaser release --skip-publish --snapshot --clean
       - goreleaser release --clean
-      - git push origin --tags
     vars:
       UPDATED_TAG:
         sh: old_tag=$(git describe --tags --abbrev=0 | cut -d "." -f3); new_tag=$((old_tag+1)); echo $new_tag
