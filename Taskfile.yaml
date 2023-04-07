@@ -23,13 +23,11 @@ tasks:
     desc: Test code
     cmds:
       - cmd: go test -v
-
   build:
     desc: Build the app
     cmds:
       - go mod tidy
       - go install -v -ldflags="-X codehub.sva.de/Lab/stuttgart-things/dev/{{.CI_PROJECT_NAME}}/cmd.commit={{.GIT_COMMIT}} -X codehub.sva.de/Lab/stuttgart-things/dev/{{.CI_PROJECT_NAME}}/cmd.date={{.DATE}} -X codehub.sva.de/Lab/stuttgart-things/dev/{{.CI_PROJECT_NAME}}/cmd.version=v{{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }}"
-
   push:
     desc: Commit & push the app
     deps: [lint, test, build]
