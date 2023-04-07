@@ -40,7 +40,6 @@ tasks:
         read COMMIT_MESSAGE;
         git commit -am "${COMMIT_MESSAGE} updating {{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }}"
       - git push
-
   run:
     desc: Run binary local
     deps: [build]
