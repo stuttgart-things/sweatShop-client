@@ -5,7 +5,6 @@ Copyright © 2023 Patrick Hermann patrick.hermann@sva.de
 package cmd
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/stuttgart-things/yacht-application-client/internal"
@@ -19,11 +18,11 @@ import (
 // address = "sleeveless-dev.labul.sva.de:8011"
 //)
 
-// uploadCmd represents the upload command
-var uploadCmd = &cobra.Command{
-	Use:   "upload",
-	Short: "upload command",
-	Long:  `upload command`,
+// sendCmd represents the send command
+var sendCmd = &cobra.Command{
+	Use:   "send",
+	Short: "send command",
+	Long:  `send command`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// GET FLAGS
@@ -40,17 +39,14 @@ var uploadCmd = &cobra.Command{
 			internal.ConnectSecure(address, file)
 		}
 
-		commit := internal.GetGitRevision("https://github.com/stuttgart-things/yacht-application-server.git")
-		fmt.Println(commit)
-
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(uploadCmd)
-	uploadCmd.Flags().String("endpoint", "", "grpc fqdn/ip of yas-endpoint")
-	uploadCmd.Flags().String("port", "443", "grpc port of yas-endpoint")
-	uploadCmd.Flags().String("file", "", "file containing revisionRuns")
-	uploadCmd.MarkFlagRequired("endpoint")
-	uploadCmd.MarkFlagRequired("file")
+	rootCmd.AddCommand(sendCmd)
+	sendCmd.Flags().String("endpoint", "", "grpc fqdn/ip of yas-endpoint")
+	sendCmd.Flags().String("port", "443", "grpc port of yas-endpoint")
+	sendCmd.Flags().String("file", "", "file containing revisionRuns")
+	sendCmd.MarkFlagRequired("endpoint")
+	sendCmd.MarkFlagRequired("file")
 }
