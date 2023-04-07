@@ -12,7 +12,6 @@ vars:
     sh: git describe --tags --abbrev=0
 
 tasks:
-
   lint:
     desc: Lint code
     cmds:
@@ -44,7 +43,6 @@ tasks:
     deps: [build]
     cmds:
       - "{{ .CI_PROJECT_NAME }}"
-
   release:
     desc: Build amd release to github
     deps: [push]
