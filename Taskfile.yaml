@@ -54,7 +54,6 @@ tasks:
       - git tag -a {{ .UPDATED_TAG_VERSION }} -m "build release for {{ .UPDATED_TAG_VERSION }}"
       - goreleaser release --skip-publish --snapshot --clean
       - goreleaser release --clean
-      - git tag -a {{ .UPDATED_TAG_VERSION }} -m 'updated for stuttgart-things {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}'
       - git push origin --tags
     vars:
       UPDATED_TAG:
