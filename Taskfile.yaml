@@ -47,6 +47,7 @@ tasks:
     desc: Build amd release to github
     deps: [push]
     cmds:
+      - git pull --tags
       - git tag -a {{ .UPDATED_TAG_VERSION }} -m "build release for {{ .UPDATED_TAG_VERSION }}"
       - git push origin --tags
       - goreleaser release --skip-publish --snapshot --clean
