@@ -44,7 +44,7 @@ tasks:
       - git push
 
   run:
-    desc: Run binary locally
+    desc: Run binary local
     deps: [build]
     cmds:
       - "{{ .CI_PROJECT_NAME }}"
