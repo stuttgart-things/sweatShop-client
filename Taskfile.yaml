@@ -1,0 +1,58 @@
+---
+version: "3"
+
+vars:
+  CI_PROJECT_NAME:
+    sh: echo ${PWD##*/}
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%h
+  DATE:
+    sh: date +"%y.%m%d.%H%M"
+  VERSION:
+    sh: git describe --tags --abbrev=0
+
+tasks:
+
+  lint:
+    desc: Lint code
+    cmds:
+      - cmd: golangci-lint run
+        ignore_error: true
+
+  test:
+    desc: Test code
+    cmds:
+      - cmd: go test -v
+
+  build:
+    desc: Build the app
+    cmds:
+      - go mod tidy
+      - go install -v -ldflags="-X codehub.sva.de/Lab/stuttgart-things/dev/{{.CI_PROJECT_NAME}}/cmd.commit={{.GIT_COMMIT}} -X codehub.sva.de/Lab/stuttgart-things/dev/{{.CI_PROJECT_NAME}}/cmd.date={{.DATE}} -X codehub.sva.de/Lab/stuttgart-things/dev/{{.CI_PROJECT_NAME}}/cmd.version=v{{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }}"
+
+  push:
+    desc: Commit & push the app
+    deps: [lint, test, build]
+    cmds:
+      - git add cmd/*
+      - git add internal/*
+      - git pull
+      - |
+        echo "Enter COMMIT_MESSAGE:"
+        read COMMIT_MESSAGE;
+        git commit -am "${COMMIT_MESSAGE} updating {{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }}"
+      - git push
+
+  run:
+    desc: Run binary locally
+    deps: [build]
+    cmds:
+      - "{{ .CI_PROJECT_NAME }}"
+
+  release:
+    desc: Build amd release to gitlab
+    deps: [push]
+    cmds:
+      - git tag -a v{{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }} -m "build release for v{{ .MAJOR }}.{{ .MINOR }}.{{ .PATCH }}"
+      - goreleaser release --skip-publish --snapshot --clean
+      - goreleaser release --clean
