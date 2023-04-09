@@ -6,11 +6,17 @@ package internal
 
 import (
 	"fmt"
+	"io"
+	"io/ioutil"
 	"os"
 	"time"
 
+	http "github.com/go-git/go-git/v5/plumbing/transport/http"
+
+	memfs "github.com/go-git/go-billy/v5/memfs"
+	memory "github.com/go-git/go-git/v5/storage/memory"
+
 	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/storage/memory"
 )
 
 func GetGitRevision(gitUrl string) (revisionDetails map[string]string) {
@@ -59,4 +65,49 @@ func CheckIfError(err error) {
 func Info(format string, args ...interface{}) {
 	fmt.Printf("\x1b[34;1m%s\x1b[0m\n", fmt.Sprintf(format, args...))
 
+}
+
+func CloneRepository(repository string, auth *http.BasicAuth) {
+
+	// Init memory storage and fs
+	storer := memory.NewStorage()
+	fs := memfs.New()
+
+	// Clone repo into memfs
+	r, err := git.Clone(storer, fs, &git.CloneOptions{
+		URL:  repository,
+		Auth: auth,
+	})
+
+	if err != nil {
+		fmt.Errorf("Could not git clone repository %s: %w", repository, err)
+	}
+	fmt.Println("Repository cloned")
+
+	// Get git default worktree
+	w, err := r.Worktree()
+	if err != nil {
+		fmt.Errorf("Could not get git worktree: %w", err)
+	}
+
+	fmt.Println(w)
+	files, err := fs.ReadDir("/")
+
+	for _, file := range files {
+		fmt.Println(file.Name())
+	}
+
+	file, _ := fs.Open("yas.log")
+	fileContent, _ := ioutil.ReadAll(file)
+	fmt.Println("File content: %+v\n", string(fileContent))
+
+	src, err := fs.OpenFile("yas.log", os.O_WRONLY|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Println(src)
+	}
+
+	hello, _ := fs.Stat("yas.log")
+	fmt.Println(hello)
+
+	io.WriteString(src, "/tmp/hello")
 }
