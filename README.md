@@ -2,10 +2,17 @@
 
 YAC is a gRPC Client for importing & sending revisionRuns to YAS
 
-## CREATE REVISIONRUN(S) ON YAS
+## GET REVISIONRUN FROM GIT REPOSITROY
 
 ```
-yacht-application-client create \
+yacht-application-client get \
+--repo https://github.com/stuttgart-things/yacht-application-server.git
+```
+
+## SEND REVISIONRUN(S) TO YAS
+
+```
+yacht-application-client send \
 --endpoint yas.dev.sthings.tiab.ssc.sva.de \
 --file yacht.json 
 ```
