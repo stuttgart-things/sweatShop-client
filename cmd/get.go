@@ -24,16 +24,20 @@ var getCmd = &cobra.Command{
 		// GET FLAGS
 		repoUrl, _ := cmd.LocalFlags().GetString("repo")
 
+		// GET COMMIT INFORMATION
 		commit := internal.GetGitRevision(repoUrl)
 		fmt.Println(commit)
 
+		// GET YACHT CONFIG/DEFAULTS
 		config := internal.GetYachtConfig("https://github.com/stuttgart-things/yacht-application-server.git", "yas.log", GetGitAuth("", ""))
 		fmt.Println(config)
 
+		// RENDER YACHT JSON
+		// + READ ENV VARS/WORKSPACES
 		vars := map[string]interface{}{"author": "patrick"}
-
 		renderedModuleCall, _ := sthingsBase.RenderTemplateInline(YachtRevisionRunJson, "missingkey=zero", "{{", "}}", vars)
 		fmt.Println(string(renderedModuleCall))
+		// + OUTPUT TO FILE
 
 	},
 }
