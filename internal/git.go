@@ -6,7 +6,6 @@ package internal
 
 import (
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"time"
@@ -35,6 +34,7 @@ func GetGitRevision(gitUrl string) (revisionDetails map[string]string) {
 	// ... retrieves the commit history
 	since := time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
 	until := time.Date(2035, 7, 30, 0, 0, 0, 0, time.UTC)
+
 	cIter, err := r.Log(&git.LogOptions{From: ref.Hash(), Since: &since, Until: &until})
 	CheckIfError(err)
 
@@ -67,7 +67,7 @@ func Info(format string, args ...interface{}) {
 
 }
 
-func CloneRepository(repository string, auth *http.BasicAuth) {
+func GetYachtConfig(repository, filename string, auth *http.BasicAuth) string {
 
 	// Init memory storage and fs
 	storer := memory.NewStorage()
@@ -80,34 +80,26 @@ func CloneRepository(repository string, auth *http.BasicAuth) {
 	})
 
 	if err != nil {
-		fmt.Errorf("Could not git clone repository %s: %w", repository, err)
+		fmt.Println("Could not git clone repository %s: %w", repository, err)
 	}
 	fmt.Println("Repository cloned")
 
 	// Get git default worktree
 	w, err := r.Worktree()
 	if err != nil {
-		fmt.Errorf("Could not get git worktree: %w", err)
+		fmt.Println("Could not get git worktree: %w", err)
 	}
 
 	fmt.Println(w)
-	files, err := fs.ReadDir("/")
+	files, _ := fs.ReadDir("/")
 
 	for _, file := range files {
 		fmt.Println(file.Name())
 	}
 
-	file, _ := fs.Open("yas.log")
+	file, _ := fs.Open(filename)
 	fileContent, _ := ioutil.ReadAll(file)
-	fmt.Println("File content: %+v\n", string(fileContent))
 
-	src, err := fs.OpenFile("yas.log", os.O_WRONLY|os.O_TRUNC, 0666)
-	if err != nil {
-		fmt.Println(src)
-	}
+	return string(fileContent)
 
-	hello, _ := fs.Stat("yas.log")
-	fmt.Println(hello)
-
-	io.WriteString(src, "/tmp/hello")
 }

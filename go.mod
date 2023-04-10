@@ -7,6 +7,7 @@ require (
 	github.com/go-git/go-git/v5 v5.6.1
 	github.com/golang/protobuf v1.5.3
 	github.com/spf13/cobra v1.7.0
+	github.com/stuttgart-things/sthingsBase v0.1.7
 	github.com/stuttgart-things/yacht-application-server v0.0.0-20230404110237-77c808872f73
 	google.golang.org/grpc v1.54.0
 )

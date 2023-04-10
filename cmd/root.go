@@ -10,23 +10,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// rootCmd represents the base command when called without any subcommands
+const YachtRevisionRunJson = `
+{
+	"repo_name": "stuttgart-things",
+	"pushed_at": "2023-02-200T22:40:36Z",
+	"author": "{{ .author }}",
+	"repo_url": "https://codehub.sva.de/Lab/stuttgart-things/stuttgart-things.git",
+	"commit_id": "03eee7226417",
+	"pipelineruns": [
+		{
+		"name": "build-kaniko-image",
+		"stage": 0,
+		"params": "context=/kaniko/decksman, dockerfile=./Dockerfile, git-revision=main, gitRepoUrl='git@codehub.sva.de:Lab/stuttgart-things/yacht/yacht-application-server.git', gitWorkspaceSubdirectory=/kaniko/decksman, image=scr.tiab.labda.sva.de/yacht-application-server/yacht-application-server, registry=scr.tiab.labda.sva.de, tag=0.0.90",
+		"workspaces": "ssh-credentials=secret;codehub-ssh;secretName, shared-workspace=persistentVolumeClaim;sthings-kaniko-workspace;claimName, dockerconfig=secret;scr-labda;secretName"
+		}
+	]
+}
+`
+
 var rootCmd = &cobra.Command{
 	Use:   "yacht-application-client",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Short: "yacht-application-client",
+	Long:  `yacht-application-client.`,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -35,13 +42,5 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.yacht-application-client.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

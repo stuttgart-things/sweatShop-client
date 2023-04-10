@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	http "github.com/go-git/go-git/v5/plumbing/transport/http"
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 
 	"github.com/spf13/cobra"
 	"github.com/stuttgart-things/yacht-application-client/internal"
@@ -26,7 +27,13 @@ var getCmd = &cobra.Command{
 		commit := internal.GetGitRevision(repoUrl)
 		fmt.Println(commit)
 
-		internal.CloneRepository("https://github.com/stuttgart-things/yacht-application-server.git", GetGitAuth("", ""))
+		config := internal.GetYachtConfig("https://github.com/stuttgart-things/yacht-application-server.git", "yas.log", GetGitAuth("", ""))
+		fmt.Println(config)
+
+		vars := map[string]interface{}{"author": "patrick"}
+
+		renderedModuleCall, _ := sthingsBase.RenderTemplateInline(YachtRevisionRunJson, "missingkey=zero", "{{", "}}", vars)
+		fmt.Println(string(renderedModuleCall))
 
 	},
 }
