@@ -30,7 +30,7 @@ var sendCmd = &cobra.Command{
 		port, _ := cmd.LocalFlags().GetString("port")
 		file, _ := cmd.LocalFlags().GetString("file")
 
-		// SET ADDRESS
+		// SET ADDRESS + SEND TO YAS
 		address := endpoint + ":" + port
 
 		if strings.Contains(address, "localhost") {

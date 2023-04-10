@@ -14,7 +14,6 @@ import (
 	"github.com/stuttgart-things/yacht-application-client/internal"
 )
 
-// getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get",
 	Short: "get command",
