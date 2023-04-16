@@ -12,11 +12,11 @@ import (
 
 const YachtRevisionRunJson = `
 {
-	"repo_name": "stuttgart-things",
-	"pushed_at": "2023-02-200T22:40:36Z",
+	"repo_name": "{{ .name }}",
+	"pushed_at": "{{ .date }}",
 	"author": "{{ .author }}",
-	"repo_url": "https://codehub.sva.de/Lab/stuttgart-things/stuttgart-things.git",
-	"commit_id": "03eee7226417",
+	"repo_url": "{{ .url }}",
+	"commit_id": "{{ .id }}",
 	"pipelineruns": [
 		{
 		"name": "build-kaniko-image",

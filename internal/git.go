@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"regexp"
+	"strings"
 	"time"
 
 	http "github.com/go-git/go-git/v5/plumbing/transport/http"
@@ -18,7 +20,7 @@ import (
 	"github.com/go-git/go-git/v5"
 )
 
-func GetGitRevision(gitUrl string) (revisionDetails map[string]string) {
+func GetGitRevision(gitUrl string) (revisionDetails map[string]interface{}) {
 
 	// Clones the given repository, creating the remote, the local branches
 	// and fetching the objects, everything in memory:
@@ -43,10 +45,26 @@ func GetGitRevision(gitUrl string) (revisionDetails map[string]string) {
 
 	CheckIfError(err)
 
-	revisionDetails = make(map[string]string)
+	revisionDetails = make(map[string]interface{})
+
+	str1 := fmt.Sprint(commit.Author)
+	re := regexp.MustCompile(`\d{4}-\d{2}-\d{2}`)
+
+	submatchall := re.FindAllString(str1, -1)
+	for _, element := range submatchall {
+		fmt.Println(element)
+	}
+
+	repoName, _ := GetRegexSubMatch(gitUrl, `^(.*/)?(?:$|(.+?)(?:(\.[^.]*$)|$))`, 2)
+	author, _ := GetRegexSubMatch(fmt.Sprint(commit.Author), `\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}`, 0)
+	date, _ := GetRegexSubMatch(fmt.Sprint(commit.Author), `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`, 0)
+
+	revisionDetails["name"] = repoName
+	revisionDetails["url"] = gitUrl
+	revisionDetails["date"] = author
 	revisionDetails["message"] = fmt.Sprintf(commit.Message)
 	revisionDetails["id"] = fmt.Sprint(commit.Hash)
-	revisionDetails["author"] = fmt.Sprint(commit.Author)
+	revisionDetails["author"] = date
 
 	return
 }
@@ -102,4 +120,16 @@ func GetYachtConfig(repository, filename string, auth *http.BasicAuth) string {
 
 	return string(fileContent)
 
+}
+
+func GetRegexSubMatch(scanText, regexPattern string, group int) (string, bool) {
+
+	rgx := regexp.MustCompile(regexPattern)
+	rs := rgx.FindStringSubmatch(scanText)
+
+	if len(rs) == 0 {
+		return "", false
+	}
+
+	return strings.Trim(rs[group], " "), true
 }
