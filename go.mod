@@ -11,6 +11,7 @@ require (
 	github.com/stuttgart-things/sthingsBase v0.1.7
 	github.com/stuttgart-things/yacht-application-server v0.0.0-20230404110237-77c808872f73
 	google.golang.org/grpc v1.54.0
+	gopkg.in/yaml.v2 v2.2.4
 )
 
 require (

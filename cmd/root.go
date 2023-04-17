@@ -10,6 +10,25 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type RevisionRun struct {
+	Stage    int    `mapstructure:"stage"`
+	Pipeline string `mapstructure:"pipeline"`
+	Params   string `mapstructure:"params"`
+}
+
+type RevisionRunConfig struct {
+	RevisionRunProfile []map[string]RevisionRun `yaml:"revisionrun"`
+}
+
+type PipelineRun struct {
+	Params     string `mapstructure:"params"`
+	Workspaces string `mapstructure:"workspaces"`
+}
+
+type PipelineRunConfig struct {
+	PipelineRunProfile []map[string]PipelineRun `mapstructure:"pipelineruns"`
+}
+
 const YachtRevisionRunJson = `
 {
 	"repo_name": "{{ .name }}",

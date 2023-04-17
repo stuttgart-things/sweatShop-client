@@ -6,8 +6,11 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"path/filepath"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 
 	http "github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/spf13/viper"
@@ -16,15 +19,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/stuttgart-things/yacht-application-client/internal"
 )
-
-type PipelineRun struct {
-	Params     string   `mapstructure:"params"`
-	Workspaces []string `mapstructure:"workspaces"`
-}
-
-type Config struct {
-	PipelineRunProfile []map[string]PipelineRun `mapstructure:"pipelineruns"`
-}
 
 var getCmd = &cobra.Command{
 	Use:   "get",
@@ -37,13 +31,17 @@ var getCmd = &cobra.Command{
 
 		// GET COMMIT INFORMATION
 		commit := internal.GetGitRevision(repoUrl)
-		// fmt.Println("COMMIT", commit)
-		// fmt.Println(commit["author"])
-		// fmt.Println(commit["ids"])
 
 		// GET YACHT CONFIG/DEFAULTS
 		revisionRunconfig := internal.GetYachtConfig("https://github.com/stuttgart-things/yacht-application-server.git", ".yacht.yaml", GetGitAuth("", ""))
-		fmt.Println(revisionRunconfig)
+		fmt.Println("REVISIONRUN!", revisionRunconfig)
+
+		allRevisionRuns := RevisionRunConfig{}
+		if err := yaml.Unmarshal([]byte(revisionRunconfig), &allRevisionRuns); err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println("allRevisionRuns:", allRevisionRuns)
 
 		// RENDER YACHT JSON
 		// + READ ENV VARS/WORKSPACES
@@ -53,19 +51,19 @@ var getCmd = &cobra.Command{
 		// + OUTPUT TO FILE
 
 		// READ PIPELINERUNVALUES
-		// templatePath := "yacht-values.yaml"
-		// var allPipelineRunValues Config
+		templatePath := "yacht-values.yaml"
+		var allPipelineRuns PipelineRunConfig
 
-		// allPipelineRunValues = ReadYamlToObject(templatePath, ".yaml", allPipelineRunValues).(Config)
+		allPipelineRuns = ReadYamlToObject(templatePath, ".yaml", allPipelineRuns).(PipelineRunConfig)
 
-		// for _, pipelineRuns := range allPipelineRunValues.PipelineRunProfile {
+		for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
 
-		// 	for name, pipelineRun := range pipelineRuns {
-		// 		fmt.Println("PIPELINE", name)
-		// 		fmt.Println("WORKSPACES", pipelineRun.Workspaces)
-		// 		fmt.Println("PARAMS", pipelineRun.Params)
-		// 	}
-		// }
+			for name, pipelineRun := range pipelineRuns {
+				fmt.Println("PIPELINE", name)
+				fmt.Println("WORKSPACES", pipelineRun.Workspaces)
+				fmt.Println("PARAMS", pipelineRun.Params)
+			}
+		}
 
 		localValues, _ := ReadPipelineRunValues("yacht-values.yaml", "build-kaniko-image")
 		gitValues, _ := ReadPipelineRunValues("yacht-values.yaml", "build-kaniko-image")
@@ -112,11 +110,11 @@ func ReadPipelineRunValues(templatePath, pipelineName string) (pipelineRunValues
 
 	pipelineRunValues = make(map[string]string)
 	// templatePath := "yacht-values.yaml"
-	var allPipelineRunValues Config
+	var allPipelineRuns PipelineRunConfig
 
-	allPipelineRunValues = ReadYamlToObject(templatePath, ".yaml", allPipelineRunValues).(Config)
+	allPipelineRuns = ReadYamlToObject(templatePath, ".yaml", allPipelineRuns).(PipelineRunConfig)
 
-	for _, pipelineRuns := range allPipelineRunValues.PipelineRunProfile {
+	for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
 
 		for name, pipelineRun := range pipelineRuns {
 			fmt.Println("PIPELINE", name)
