@@ -34,35 +34,34 @@ var getCmd = &cobra.Command{
 		// GET COMMIT INFORMATION
 		commit := internal.GetGitRevision(repoUrl)
 
-		// GET YACHT CONFIG/DEFAULTS
+		// GET YACHT CONFIG/DEFAULTS FROM GIT
 		revisionRunconfig := internal.GetYachtConfig(repoUrl, remote, GetGitAuth("", ""))
-		fmt.Println("REVISIONRUN!", revisionRunconfig)
-
 		allRevisionRuns := RevisionRunConfig{}
 		if err := yaml.Unmarshal([]byte(revisionRunconfig), &allRevisionRuns); err != nil {
 			log.Fatal(err)
 		}
-
 		fmt.Println("allRevisionRuns:", allRevisionRuns)
 
-		// RENDER YACHT JSON
-		// + READ ENV VARS/WORKSPACES
-		// vars := map[string]interface{}{"author": "patrick"}
-		renderedModuleCall, _ := sthingsBase.RenderTemplateInline(YachtRevisionRunJson, "missingkey=zero", "{{", "}}", commit)
-		fmt.Println(string(renderedModuleCall))
-		// + OUTPUT TO FILE
-
-		// READ PIPELINERUNVALUES
+		// READ PIPELINERUNVALUES FROM LOCAL FILE
 		var allPipelineRuns PipelineRunConfig
-
 		allPipelineRuns = ReadYamlToObject(local, ".yaml", allPipelineRuns).(PipelineRunConfig)
 
-		for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
+		fmt.Println(allPipelineRuns)
+		// for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
+		// 	for name, pipelineRun := range pipelineRuns {
+		// 		fmt.Println("PIPELINE", name)
+		// 		fmt.Println("WORKSPACES", pipelineRun.Workspaces)
+		// 		fmt.Println("PARAMS", pipelineRun.Params)
+		// 	}
+		// }
 
-			for name, pipelineRun := range pipelineRuns {
-				fmt.Println("PIPELINE", name)
-				fmt.Println("WORKSPACES", pipelineRun.Workspaces)
-				fmt.Println("PARAMS", pipelineRun.Params)
+		// ITERATE OVER STAGES
+		for _, revisionRun := range allRevisionRuns.RevisionRunProfile {
+			for name, revisionRun := range revisionRun {
+
+				fmt.Println("NAME", name)
+				fmt.Println("STAGE", revisionRun.Stage)
+				ValidateGetLocalValues(revisionRun.Pipeline, allPipelineRuns)
 			}
 		}
 
@@ -71,6 +70,13 @@ var getCmd = &cobra.Command{
 
 		fmt.Println(localValues, gitValues)
 		// templatePath := "yacht-values.yaml"
+
+		// RENDER YACHT JSON
+		// + READ ENV VARS/WORKSPACES
+		// vars := map[string]interface{}{"author": "patrick"}
+		renderedModuleCall, _ := sthingsBase.RenderTemplateInline(YachtRevisionRunJson, "missingkey=zero", "{{", "}}", commit)
+		fmt.Println(string(renderedModuleCall))
+		// + OUTPUT TO FILE
 
 	},
 }
@@ -136,4 +142,24 @@ func ReadPipelineRunValues(templatePath, pipelineName string) (pipelineRunValues
 
 	return
 
+}
+
+func ValidateGetLocalValues(pipelineName string, allPipelineRuns PipelineRunConfig) (params, workspaces string) {
+
+	for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
+		for name, pipelineRun := range pipelineRuns {
+			fmt.Println("1", name)
+			fmt.Println("2", pipelineName)
+
+			if strings.Contains(name, pipelineName) {
+				fmt.Println("FOUND!")
+				fmt.Println("WORKSPACES", pipelineRun.Workspaces)
+				fmt.Println("PARAMS", pipelineRun.Params)
+				params = pipelineRun.Params
+				workspaces = pipelineRun.Workspaces
+			}
+		}
+	}
+
+	return
 }
