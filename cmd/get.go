@@ -18,8 +18,8 @@ import (
 )
 
 type PipelineRun struct {
-	Params     string `mapstructure:"params"`
-	Workspaces string `mapstructure:"workspaces"`
+	Params     string   `mapstructure:"params"`
+	Workspaces []string `mapstructure:"workspaces"`
 }
 
 type Config struct {
@@ -37,9 +37,9 @@ var getCmd = &cobra.Command{
 
 		// GET COMMIT INFORMATION
 		commit := internal.GetGitRevision(repoUrl)
-		fmt.Println("COMMIT", commit)
-		fmt.Println(commit["author"])
-		fmt.Println(commit["ids"])
+		// fmt.Println("COMMIT", commit)
+		// fmt.Println(commit["author"])
+		// fmt.Println(commit["ids"])
 
 		// GET YACHT CONFIG/DEFAULTS
 		revisionRunconfig := internal.GetYachtConfig("https://github.com/stuttgart-things/yacht-application-server.git", ".yacht.yaml", GetGitAuth("", ""))
@@ -121,12 +121,12 @@ func ReadPipelineRunValues(templatePath, pipelineName string) (pipelineRunValues
 		for name, pipelineRun := range pipelineRuns {
 			fmt.Println("PIPELINE", name)
 
-			if name == pipelineName {
+			if strings.Contains(name, pipelineName) {
 
 				fmt.Println("WORKSPACES", pipelineRun.Workspaces)
 				fmt.Println("PARAMS", pipelineRun.Params)
-				pipelineRunValues["PARAMS"] = pipelineRun.Params
-				pipelineRunValues["WORKSPACES"] = pipelineRun.Workspaces
+				// pipelineRunValues["PARAMS"] = pipelineRun.Params
+				// pipelineRunValues["WORKSPACES"] = pipelineRun.Workspaces
 				pipelineFound = true
 			}
 
