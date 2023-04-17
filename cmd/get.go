@@ -28,12 +28,14 @@ var getCmd = &cobra.Command{
 
 		// GET FLAGS
 		repoUrl, _ := cmd.LocalFlags().GetString("repo")
+		local, _ := cmd.LocalFlags().GetString("local")
+		remote, _ := cmd.LocalFlags().GetString("remote")
 
 		// GET COMMIT INFORMATION
 		commit := internal.GetGitRevision(repoUrl)
 
 		// GET YACHT CONFIG/DEFAULTS
-		revisionRunconfig := internal.GetYachtConfig("https://github.com/stuttgart-things/yacht-application-server.git", ".yacht.yaml", GetGitAuth("", ""))
+		revisionRunconfig := internal.GetYachtConfig(repoUrl, remote, GetGitAuth("", ""))
 		fmt.Println("REVISIONRUN!", revisionRunconfig)
 
 		allRevisionRuns := RevisionRunConfig{}
@@ -51,10 +53,9 @@ var getCmd = &cobra.Command{
 		// + OUTPUT TO FILE
 
 		// READ PIPELINERUNVALUES
-		templatePath := "yacht-values.yaml"
 		var allPipelineRuns PipelineRunConfig
 
-		allPipelineRuns = ReadYamlToObject(templatePath, ".yaml", allPipelineRuns).(PipelineRunConfig)
+		allPipelineRuns = ReadYamlToObject(local, ".yaml", allPipelineRuns).(PipelineRunConfig)
 
 		for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
 
@@ -65,8 +66,8 @@ var getCmd = &cobra.Command{
 			}
 		}
 
-		localValues, _ := ReadPipelineRunValues("yacht-values.yaml", "build-kaniko-image")
-		gitValues, _ := ReadPipelineRunValues("yacht-values.yaml", "build-kaniko-image")
+		localValues, _ := ReadPipelineRunValues(local, "build-kaniko-image")
+		gitValues, _ := ReadPipelineRunValues(remote, "build-kaniko-image")
 
 		fmt.Println(localValues, gitValues)
 		// templatePath := "yacht-values.yaml"
@@ -77,6 +78,8 @@ var getCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(getCmd)
 	getCmd.Flags().String("repo", "", "git repository url")
+	getCmd.Flags().String("remote", ".yacht.yaml", "remote/repo values")
+	getCmd.Flags().String("local", "yacht-values.yaml", "local/default values")
 	getCmd.MarkFlagRequired("repo")
 }
 
