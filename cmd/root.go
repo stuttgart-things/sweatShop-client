@@ -37,12 +37,15 @@ const YachtRevisionRunJson = `
 	"repo_url": "{{ .url }}",
 	"commit_id": "{{ .id }}",
 	"pipelineruns": [
+	{{ range .halo2 }}
+	{{ .Stage }}
 		{
 		"name": "build-kaniko-image",
 		"stage": 0,
 		"params": "context=/kaniko/decksman, dockerfile=./Dockerfile, git-revision=main, gitRepoUrl='git@codehub.sva.de:Lab/stuttgart-things/yacht/yacht-application-server.git', gitWorkspaceSubdirectory=/kaniko/decksman, image=scr.tiab.labda.sva.de/yacht-application-server/yacht-application-server, registry=scr.tiab.labda.sva.de, tag=0.0.90",
 		"workspaces": "ssh-credentials=secret;codehub-ssh;secretName, shared-workspace=persistentVolumeClaim;sthings-kaniko-workspace;claimName, dockerconfig=secret;scr-labda;secretName"
 		}
+	{{ end }}
 	]
 }
 `
