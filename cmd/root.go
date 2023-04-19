@@ -29,6 +29,23 @@ type PipelineRunConfig struct {
 	PipelineRunProfile []map[string]PipelineRun `mapstructure:"pipelineruns"`
 }
 
+type PipelineRunJson struct {
+	Name       string
+	Stage      int
+	Params     string
+	Workspaces string
+}
+
+type RevisionRunJson struct {
+	RepoName            string
+	PushedAt            string
+	Author              string
+	RepoUrl             string
+	CommitId            string
+	RevisionRunCreation string
+	PipelineRuns        []PipelineRun
+}
+
 const YachtRevisionRunJson = `
 {
 	"repo_name": "{{ .name }}",

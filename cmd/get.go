@@ -90,7 +90,7 @@ var getCmd = &cobra.Command{
 		// bla = append(bla, hello)
 		pipelineParams := make(map[string]string)
 		pipelineParams["hello"] = "hello"
-		hello2 := yas.PipelineRun{"", "", "", "", "", "", "", "", "", "", pipelineParams, bla, "", "", ""}
+		hello2 := yas.PipelineRun{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), "", "", "", "", "", "", pipelineParams, bla, "", "", ""}
 
 		fmt.Println(hello)
 		fmt.Println(hello2)
