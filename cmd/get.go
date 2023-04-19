@@ -16,7 +16,6 @@ import (
 	http "github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	"github.com/stuttgart-things/yacht-application-client/internal"
 	yas "github.com/stuttgart-things/yacht-application-server/server"
 )
@@ -81,8 +80,8 @@ var getCmd = &cobra.Command{
 		commit["halo"] = []string{"hello", "whatever"}
 		commit["halo2"] = RevisionRun{0, "world", "whatever"}
 
-		renderedModuleCall, _ := sthingsBase.RenderTemplateInline(YachtRevisionRunJson, "missingkey=zero", "{{", "}}", commit)
-		fmt.Println(string(renderedModuleCall))
+		// renderedModuleCall, _ := sthingsBase.RenderTemplateInline(YachtRevisionRunJson, "missingkey=zero", "{{", "}}", commit)
+		// fmt.Println(string(renderedModuleCall))
 		// + OUTPUT TO FILE
 
 		hello := yas.Workspace{"", "", "", ""}
@@ -90,17 +89,24 @@ var getCmd = &cobra.Command{
 		// bla = append(bla, hello)
 		pipelineParams := make(map[string]string)
 		pipelineParams["hello"] = "hello"
-		hello2 := yas.PipelineRun{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), "", "", "", "", "", "", pipelineParams, bla, "", "", ""}
+		hello2 := yas.PipelineRun{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), "", "", "", "", pipelineParams, bla, "", "", ""}
+
+		pr := PipelineRunJson{"hello", 1, "bla=blubb", "scr-labda"}
+		var prs []PipelineRunJson
+		prs = append(prs, pr)
+		hello3 := RevisionRunJson{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), prs}
+		k, _ := json.MarshalIndent(hello3, "", "  ")
+		log.Println(string(k))
 
 		fmt.Println(hello)
 		fmt.Println(hello2)
 
-		j, _ := json.Marshal(hello2)
+		// j, _ := json.Marshal(hello2)
 
-		fmt.Println(j)
+		// fmt.Println(j)
 
-		j, _ = json.MarshalIndent(hello2, "", "  ")
-		log.Println(string(j))
+		// j, _ := json.MarshalIndent(hello2, "", "  ")
+		// log.Println(string(j))
 
 	},
 }

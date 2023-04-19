@@ -43,7 +43,7 @@ type RevisionRunJson struct {
 	RepoUrl             string
 	CommitId            string
 	RevisionRunCreation string
-	PipelineRuns        []PipelineRun
+	PipelineRuns        []PipelineRunJson
 }
 
 const YachtRevisionRunJson = `
