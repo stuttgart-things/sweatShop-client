@@ -12,13 +12,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//var (
-// address = "localhost:50051"
-// address = "yas.dev.sthings.tiab.ssc.sva.de:443"
-// address = "sleeveless-dev.labul.sva.de:8011"
-//)
-
-// sendCmd represents the send command
 var sendCmd = &cobra.Command{
 	Use:   "send",
 	Short: "send command",
