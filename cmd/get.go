@@ -47,15 +47,11 @@ var getCmd = &cobra.Command{
 		allPipelineRuns = ReadYamlToObject(local, ".yaml", allPipelineRuns).(PipelineRunConfig)
 
 		fmt.Println(allPipelineRuns)
-		// for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
-		// 	for name, pipelineRun := range pipelineRuns {
-		// 		fmt.Println("PIPELINE", name)
-		// 		fmt.Println("WORKSPACES", pipelineRun.Workspaces)
-		// 		fmt.Println("PARAMS", pipelineRun.Params)
-		// 	}
-		// }
 
 		// ITERATE OVER STAGES
+
+		var prs1 []PipelineRunJson
+
 		for _, revisionRun := range allRevisionRuns.RevisionRunProfile {
 			for name, revisionRun := range revisionRun {
 
@@ -63,8 +59,13 @@ var getCmd = &cobra.Command{
 				fmt.Println("STAGE", revisionRun.Stage)
 				params, workspaces := ValidateGetLocalValues(revisionRun.Pipeline, allPipelineRuns)
 				fmt.Println(params, workspaces)
+				pr := PipelineRunJson{revisionRun.Pipeline, revisionRun.Stage, params, workspaces}
+				prs1 = append(prs1, pr)
+
 			}
 		}
+
+		fmt.Println(prs1)
 
 		localValues, _ := ReadPipelineRunValues(local, "build-kaniko-image")
 		gitValues, _ := ReadPipelineRunValues(remote, "build-kaniko-image")
@@ -77,9 +78,6 @@ var getCmd = &cobra.Command{
 		// vars := map[string]interface{}{"author": "patrick"}
 		// vars := map[string]interface{}{"author": "patrick"}
 
-		commit["halo"] = []string{"hello", "whatever"}
-		commit["halo2"] = RevisionRun{0, "world", "whatever"}
-
 		// renderedModuleCall, _ := sthingsBase.RenderTemplateInline(YachtRevisionRunJson, "missingkey=zero", "{{", "}}", commit)
 		// fmt.Println(string(renderedModuleCall))
 		// + OUTPUT TO FILE
@@ -91,22 +89,12 @@ var getCmd = &cobra.Command{
 		pipelineParams["hello"] = "hello"
 		hello2 := yas.PipelineRun{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), "", "", "", "", pipelineParams, bla, "", "", ""}
 
-		pr := PipelineRunJson{"hello", 1, "bla=blubb", "scr-labda"}
-		var prs []PipelineRunJson
-		prs = append(prs, pr)
-		hello3 := RevisionRunJson{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), prs}
+		hello3 := RevisionRunJson{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), prs1}
 		k, _ := json.MarshalIndent(hello3, "", "  ")
 		log.Println(string(k))
 
 		fmt.Println(hello)
 		fmt.Println(hello2)
-
-		// j, _ := json.Marshal(hello2)
-
-		// fmt.Println(j)
-
-		// j, _ := json.MarshalIndent(hello2, "", "  ")
-		// log.Println(string(j))
 
 	},
 }
