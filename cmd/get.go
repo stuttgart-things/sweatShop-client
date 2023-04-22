@@ -17,7 +17,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/stuttgart-things/yacht-application-client/internal"
-	yas "github.com/stuttgart-things/yacht-application-server/server"
 )
 
 var getCmd = &cobra.Command{
@@ -82,19 +81,19 @@ var getCmd = &cobra.Command{
 		// fmt.Println(string(renderedModuleCall))
 		// + OUTPUT TO FILE
 
-		hello := yas.Workspace{"", "", "", ""}
-		bla := []yas.Workspace{hello}
+		// hello := yas.Workspace{"", "", "", ""}
+		// bla := []yas.Workspace{hello}
 		// bla = append(bla, hello)
 		pipelineParams := make(map[string]string)
 		pipelineParams["hello"] = "hello"
-		hello2 := yas.PipelineRun{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), "", "", "", "", pipelineParams, bla, "", "", ""}
+		// hello2 := yas.PipelineRun{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), "", "", "", "", pipelineParams, bla, "", "", ""}
 
 		hello3 := RevisionRunJson{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), prs1}
 		k, _ := json.MarshalIndent(hello3, "", "  ")
 		log.Println(string(k))
 
-		fmt.Println(hello)
-		fmt.Println(hello2)
+		// fmt.Println(hello)
+		// fmt.Println(hello2)
 
 	},
 }
