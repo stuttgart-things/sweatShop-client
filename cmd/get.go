@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	sthingsBase "github.com/stuttgart-things/sthingsBase"
 	"gopkg.in/yaml.v2"
 
 	http "github.com/go-git/go-git/v5/plumbing/transport/http"
@@ -39,37 +40,37 @@ var getCmd = &cobra.Command{
 		if err := yaml.Unmarshal([]byte(revisionRunconfig), &allRevisionRuns); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("allRevisionRuns:", allRevisionRuns)
+		// fmt.Println("allRevisionRuns:", allRevisionRuns)
 
 		// READ PIPELINERUNVALUES FROM LOCAL FILE
 		var allPipelineRuns PipelineRunConfig
 		allPipelineRuns = ReadYamlToObject(local, ".yaml", allPipelineRuns).(PipelineRunConfig)
 
-		fmt.Println(allPipelineRuns)
-
 		// ITERATE OVER STAGES
 
 		var prs1 []PipelineRunJson
 
-		for _, revisionRun := range allRevisionRuns.RevisionRunProfile {
-			for name, revisionRun := range revisionRun {
+		for _, revisionRun := range allPipelineRuns.PipelineRunProfile {
 
-				fmt.Println("NAME", name)
-				fmt.Println("STAGE", revisionRun.Stage)
-				params, workspaces := ValidateGetLocalValues(revisionRun.Pipeline, allPipelineRuns)
-				fmt.Println(params, workspaces)
-				pr := PipelineRunJson{revisionRun.Pipeline, revisionRun.Stage, params, workspaces}
+			for name := range revisionRun {
+
+				stage, params := ValidatePipelineRunValues(name, allRevisionRuns)
+
+				renderedParameters, _ := sthingsBase.RenderTemplateInline(params+", "+revisionRun[name].Params, "missingkey=zero", "{{", "}}", commit)
+
+				pr := PipelineRunJson{name, stage, string(renderedParameters), revisionRun[name].Workspaces}
+
 				prs1 = append(prs1, pr)
 
 			}
 		}
 
-		fmt.Println(prs1)
+		// fmt.Println(prs1)
 
-		localValues, _ := ReadPipelineRunValues(local, "build-kaniko-image")
-		gitValues, _ := ReadPipelineRunValues(remote, "build-kaniko-image")
+		// localValues, _ := ReadPipelineRunValues(local, "build-kaniko-image")
+		// gitValues, _ := ReadPipelineRunValues(remote, "build-kaniko-image")
 
-		fmt.Println(localValues, gitValues)
+		// fmt.Println(localValues, gitValues)
 		// templatePath := "yacht-values.yaml"
 
 		// RENDER YACHT JSON
@@ -84,11 +85,11 @@ var getCmd = &cobra.Command{
 		// hello := yas.Workspace{"", "", "", ""}
 		// bla := []yas.Workspace{hello}
 		// bla = append(bla, hello)
-		pipelineParams := make(map[string]string)
-		pipelineParams["hello"] = "hello"
+		// pipelineParams := make(map[string]string)
+		// pipelineParams["hello"] = "hello"
 		// hello2 := yas.PipelineRun{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), "", "", "", "", pipelineParams, bla, "", "", ""}
 
-		hello3 := RevisionRunJson{commit["name"].(string), commit["author"].(string), commit["name"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), prs1}
+		hello3 := RevisionRunJson{commit["name"].(string), commit["date"].(string), commit["author"].(string), commit["url"].(string), commit["id"].(string), commit["date"].(string), prs1}
 		k, _ := json.MarshalIndent(hello3, "", "  ")
 		log.Println(string(k))
 
@@ -135,7 +136,6 @@ func ReadYamlToObject(pathToConfig, extension string, object interface{}) interf
 func ReadPipelineRunValues(templatePath, pipelineName string) (pipelineRunValues map[string]string, pipelineFound bool) {
 
 	pipelineRunValues = make(map[string]string)
-	// templatePath := "yacht-values.yaml"
 	var allPipelineRuns PipelineRunConfig
 
 	allPipelineRuns = ReadYamlToObject(templatePath, ".yaml", allPipelineRuns).(PipelineRunConfig)
@@ -147,13 +147,11 @@ func ReadPipelineRunValues(templatePath, pipelineName string) (pipelineRunValues
 
 			if strings.Contains(name, pipelineName) {
 
-				fmt.Println("WORKSPACES", pipelineRun.Workspaces)
-				fmt.Println("PARAMS", pipelineRun.Params)
-				// pipelineRunValues["PARAMS"] = pipelineRun.Params
-				// pipelineRunValues["WORKSPACES"] = pipelineRun.Workspaces
+				pipelineRunValues["PARAMS"] = pipelineRun.Params
+				pipelineRunValues["WORKSPACES"] = pipelineRun.Workspaces
 				pipelineFound = true
-			}
 
+			}
 		}
 	}
 
@@ -161,20 +159,18 @@ func ReadPipelineRunValues(templatePath, pipelineName string) (pipelineRunValues
 
 }
 
-func ValidateGetLocalValues(pipelineName string, allPipelineRuns PipelineRunConfig) (params, workspaces string) {
+func ValidatePipelineRunValues(pipelineName string, allRevisionRuns RevisionRunConfig) (stage int, params string) {
 
-	for _, pipelineRuns := range allPipelineRuns.PipelineRunProfile {
-		for name, pipelineRun := range pipelineRuns {
-			fmt.Println("1", name)
-			fmt.Println("2", pipelineName)
+	for _, revisionRun := range allRevisionRuns.RevisionRunProfile {
 
-			if strings.Contains(name, pipelineName) {
-				fmt.Println("FOUND!")
-				fmt.Println("WORKSPACES", pipelineRun.Workspaces)
-				fmt.Println("PARAMS", pipelineRun.Params)
-				params = pipelineRun.Params
-				workspaces = pipelineRun.Workspaces
+		for _, revisionRun := range revisionRun {
+
+			if strings.Contains(pipelineName, revisionRun.Pipeline) {
+				stage = revisionRun.Stage
+				params = revisionRun.Params
+
 			}
+
 		}
 	}
 
