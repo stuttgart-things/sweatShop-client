@@ -17,7 +17,7 @@ import (
 	http "github.com/go-git/go-git/v5/plumbing/transport/http"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/stuttgart-things/yacht-application-client/internal"
+	"github.com/stuttgart-things/sweatShop-client/internal"
 )
 
 var getCmd = &cobra.Command{

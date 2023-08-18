@@ -7,7 +7,7 @@ package cmd
 import (
 	"strings"
 
-	"github.com/stuttgart-things/yacht-application-client/internal"
+	"github.com/stuttgart-things/sweatShop-client/internal"
 
 	"github.com/spf13/cobra"
 )

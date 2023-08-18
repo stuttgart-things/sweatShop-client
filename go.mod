@@ -1,4 +1,4 @@
-module github.com/stuttgart-things/yacht-application-client
+module github.com/stuttgart-things/sweatShop-client
 
 go 1.20
 
@@ -9,7 +9,7 @@ require (
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/viper v1.15.0
 	github.com/stuttgart-things/sthingsBase v0.1.8
-	github.com/stuttgart-things/yacht-application-server v0.0.0-20230418194313-cb64aa07188f
+	github.com/stuttgart-things/sweatShop-server v0.0.0-20230818101351-b26d490954df
 	google.golang.org/grpc v1.54.0
 	gopkg.in/yaml.v2 v2.3.0
 )

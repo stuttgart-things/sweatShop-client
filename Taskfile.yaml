@@ -12,6 +12,16 @@ vars:
     sh: git describe --tags --abbrev=0
 
 tasks:
+  git-push:
+    desc: Commit & push the module
+    cmds:
+      - go mod tidy
+      - git pull
+      - git config advice.addIgnoredFile false
+      - git add *
+      - git commit -am 'updated {{ .PROJECT_NAME }} {{ .DATE }} for tag version {{ .UPDATED_TAG_VERSION }}{{ .BRANCH }}'
+      - git push
+
   lint:
     desc: Lint code
     cmds:

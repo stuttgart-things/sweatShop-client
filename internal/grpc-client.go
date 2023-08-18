@@ -15,7 +15,7 @@ import (
 	"time"
 
 	//"google.golang.org/grpc/credentials"
-	revisionrun "github.com/stuttgart-things/yacht-application-server/revisionrun"
+	revisionrun "github.com/stuttgart-things/sweatShop-server/revisionrun"
 
 	"google.golang.org/grpc/credentials"
 

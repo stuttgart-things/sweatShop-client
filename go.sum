@@ -234,8 +234,8 @@ github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKs
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stuttgart-things/sthingsBase v0.1.8 h1:Vi4YHR2YLRjiCxYrrA2QWhNdlSX7N/i9XlHsTnwwkAY=
 github.com/stuttgart-things/sthingsBase v0.1.8/go.mod h1:m8KEQVzuV5wwxg+G8OWb+YXOVp0ZRq3MeVUT3p5N8zc=
-github.com/stuttgart-things/yacht-application-server v0.0.0-20230418194313-cb64aa07188f h1:iZkXgQwoIR7eRIiZbRmCGWq+oFgSqso61VNXor1z4Qg=
-github.com/stuttgart-things/yacht-application-server v0.0.0-20230418194313-cb64aa07188f/go.mod h1:XTPSNvyxg6MUlhuJjFwtyzzT4FnLNx0cZ8SlnhZfry8=
+github.com/stuttgart-things/sweatShop-server v0.0.0-20230818101351-b26d490954df h1:SmewJXsBQdnj5R5fAz8zxYKfzRaE30Tl9PwMWBxWqiU=
+github.com/stuttgart-things/sweatShop-server v0.0.0-20230818101351-b26d490954df/go.mod h1:ybU0d0Cm+qFfvJGJFW7QQsaDmiXXRNaoHxiLsbEgWpE=
 github.com/subosito/gotenv v1.4.2 h1:X1TuBLAMDFbaTAChgCBLu3DU3UPyELpnF2jjJ2cz/S8=
 github.com/subosito/gotenv v1.4.2/go.mod h1:ayKnFf/c6rvx/2iiLrJUk1e6plDbT3edrFNGqEflhK0=
 github.com/xanzy/ssh-agent v0.3.3 h1:+/15pJfg/RsTxqYcX6fHqOXZwwMP+2VyYWJeWM2qQFM=
