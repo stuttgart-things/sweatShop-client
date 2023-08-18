@@ -25,14 +25,14 @@ import (
 )
 
 type Client struct {
-	yasClient revisionrun.YachtApplicationServiceClient
-	timeout   time.Duration
+	sweatShopClient revisionrun.SweatShopApplicationServiceClient
+	timeout         time.Duration
 }
 
 func NewClient(conn grpc.ClientConnInterface, timeout time.Duration) Client {
 	return Client{
-		yasClient: revisionrun.NewYachtApplicationServiceClient(conn),
-		timeout:   timeout,
+		sweatShopClient: revisionrun.NewSweatShopApplicationServiceClient(conn),
+		timeout:         timeout,
 	}
 }
 
@@ -45,7 +45,7 @@ func (c Client) CreateRevisionRun(ctx context.Context, json io.Reader) error {
 		return fmt.Errorf("client create revisionrun: unmarshal: %w", err)
 	}
 
-	res, err := c.yasClient.CreateRevisionRun(ctx, &req)
+	res, err := c.sweatShopClient.CreateRevisionRun(ctx, &req)
 
 	fmt.Println(res)
 
@@ -84,8 +84,8 @@ func ConnectSecure(address, file string) {
 		log.Fatalln(err)
 	}
 
-	yasClient := NewClient(conn, time.Second)
-	err = yasClient.CreateRevisionRun(context.Background(), bytes.NewBuffer(json))
+	sweatShop := NewClient(conn, time.Second)
+	err = sweatShop.CreateRevisionRun(context.Background(), bytes.NewBuffer(json))
 
 	log.Println("ERR:", err)
 
@@ -107,8 +107,8 @@ func ConnectInsecure(address, file string) {
 		log.Fatalln(err)
 	}
 
-	yasClient := NewClient(conn, time.Second)
-	err = yasClient.CreateRevisionRun(context.Background(), bytes.NewBuffer(json))
+	sweatShop := NewClient(conn, time.Second)
+	err = sweatShop.CreateRevisionRun(context.Background(), bytes.NewBuffer(json))
 
 	log.Println("ERR:", err)
 
